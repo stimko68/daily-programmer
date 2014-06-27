@@ -15,7 +15,9 @@ from highest to lowest. Other rules:
  - In the final output, the student's grades should be sorted left to right
    from highest to lowest, followed by the final grade
 """
+import argparse
 import re
+
 
 class Student(object):
 
@@ -73,13 +75,20 @@ class Student(object):
         return self.grade_list
 
 
-with open('167_students.txt', 'r') as f:
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Program to input student grades and output final scores')
+    parser.add_argument('-i', '--input', action='store', default=None, dest='input',
+                        help='Input file containing list of student names and list of grades.')
 
-    all_students = []
+    args = parser.parse_args()
 
-    for line in f:
-        match = re.match(r'^([^,]+)\s*,(\s*\D+)+\s*(.*)', line)
-        first_name, last_name = match.group(1).strip(), match.group(2).strip()
-        scores = [float(x) for x in re.split(r'\s+', match.group(3).strip())]
-        student = Student(first_name, last_name, scores)
-        print(student.calculate_final_grades())
+    with open(args.input) as f:
+
+        all_students = []
+
+        for line in f:
+            match = re.match(r'^([^,]+)\s*,(\s*\D+)+\s*(.*)', line)
+            first_name, last_name = match.group(1).strip(), match.group(2).strip()
+            scores = [float(x) for x in re.split(r'\s+', match.group(3).strip())]
+            student = Student(first_name, last_name, scores)
+            print(student.calculate_final_grades())
